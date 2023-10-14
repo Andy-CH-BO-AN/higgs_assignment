@@ -1,2 +1,6 @@
-.pytest_cache
-.idea
+/pytest_cache/
+/idea/
+.env
+/allure-report/
+/allure-results/
+/myenv/

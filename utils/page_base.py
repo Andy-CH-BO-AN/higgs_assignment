@@ -1,8 +1,6 @@
 import time
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
 
 
 class PageBase:
@@ -30,5 +28,5 @@ class PageBase:
                 break
             last_height = new_height
 
-    def scroll_to_the_top(self):
-        self.find_element((By.TAG_NAME, "body")).send_keys(Keys.CONTROL + Keys.HOME)
+    def scroll_to_the_element(self, element):
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
