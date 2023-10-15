@@ -7,7 +7,7 @@ from page_objects.higgster_benefit_page import HiggstarBenefitPage
 import allure
 
 
-@allure.title("categories")
+@allure.title("search higgs scenario")
 def test_higgstar_website(driver):
     google_index_page = GoogleIndexPage(driver)
     google_search_page = GoogleSearchPage(driver)
