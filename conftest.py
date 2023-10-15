@@ -7,7 +7,11 @@ import allure
 from allure_commons.types import AttachmentType
 from dotenv import load_dotenv
 
-load_dotenv()
+if 'ENV' in os.environ:
+    env_file = os.environ['ENV']
+    load_dotenv(env_file)
+else:
+    load_dotenv()
 
 
 @pytest.fixture(scope="function")
