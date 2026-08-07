@@ -1,11 +1,13 @@
-from utils.page_base import PageBase
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+
+from utils.page_base import PageBase
 
 
 class GoogleIndexPage(PageBase):
-    input_search = (By.ID, "APjFqb")
-    button_search = (By.XPATH, '//input[@value="Google 搜尋"]')
+    input_search = (By.NAME, "q")
 
     def search_keyword(self, keyword):
-        self.find_element(self.input_search).send_keys(keyword)
-        self.find_element(self.button_search).click()
+        search_box = self.find_element(self.input_search)
+        search_box.clear()
+        search_box.send_keys(keyword, Keys.ENTER)
