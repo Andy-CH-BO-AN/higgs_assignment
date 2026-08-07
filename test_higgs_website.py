@@ -1,32 +1,31 @@
-import logging
-import os
-from page_objects.google_index_page import GoogleIndexPage
-from page_objects.google_search_page import GoogleSearchPage
-from page_objects.higgstar_index_page import HiggstarIndexPage
-from page_objects.higgster_benefit_page import HiggstarBenefitPage
 import allure
 
+from page_objects.google_index_page import GoogleIndexPage
+from page_objects.google_search_page import GoogleSearchPage
+from page_objects.higgs_benefits_page import HiggsBenefitsPage
+from page_objects.higgs_home_page import HiggsHomePage
 
-@allure.title("search higgs scenario")
-def test_higgstar_website(driver):
+
+@allure.title("Search Higgs from Google and verify jobs and benefits")
+def test_higgs_website(driver, domains):
     google_index_page = GoogleIndexPage(driver)
     google_search_page = GoogleSearchPage(driver)
-    higgstar_index_page = HiggstarIndexPage(driver)
-    higgster_benefit_page = HiggstarBenefitPage(driver)
+    higgs_home_page = HiggsHomePage(driver)
+    higgs_benefits_page = HiggsBenefitsPage(driver)
 
-    google_url = os.getenv('GOOGLE_DOMAIN')
-    higgstar_website = os.getenv('HIGGS_DOMAIN')
-    driver.get(google_url)
-
+    driver.get(domains.google)
     google_index_page.search_keyword("higgs tec. inc.")
-    google_search_page.click_website(higgstar_website)
-    higgstar_index_page.go_to_title()
-    higgstar_index_page.click_jobs()
+    google_search_page.open_website(domains.higgs)
+    higgs_home_page.wait_until_loaded()
 
-    parent = driver.window_handles[0]
-    driver.switch_to.window(parent)
-    assert driver.current_url == higgstar_website, \
-        (logging.info(f"current_url: {driver.current_url} != higgstar_website: {higgstar_website}"))
+    home_window = driver.current_window_handle
+    jobs_window = higgs_home_page.open_jobs()
+    assert jobs_window != home_window, "Jobs link did not open a new browser window"
 
-    higgstar_index_page.click_benefit_page()
-    higgster_benefit_page.check_benefit_title()
+    driver.switch_to.window(home_window)
+    assert driver.current_url.rstrip("/") == domains.higgs.rstrip("/"), (
+        f"Unexpected Higgs URL: {driver.current_url}"
+    )
+
+    higgs_home_page.open_benefits()
+    assert higgs_benefits_page.is_loaded(), "Benefits page title is not visible"
